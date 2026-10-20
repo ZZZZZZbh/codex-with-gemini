@@ -1,0 +1,26 @@
+# Local credentials and environment files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+cookies*.json
+credentials*.json
+token*.json
+
+# Local client state and execution evidence
+/.codex/
+/.agents/
+/artifacts/
+/local/
+/test-runs/
+/screenshots/
+*.log
+
+# Editor and runtime files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]

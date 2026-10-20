@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex 与 Gemini 协作"
+  short_description: "让 Codex 与 Gemini 使用最高可用推理档位协作检索、分析并交叉核对"
+  default_prompt: "使用 $codex-with-gemini 完成以下学术研究任务：主动调用 Gemini 当时可用的最高能力模型和最高思考档位，按任务需要提交相关文件和数据，获取回复并与 Codex 的检索和分析交叉核对。"
