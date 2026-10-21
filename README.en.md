@@ -2,24 +2,28 @@
 
 [简体中文](README.md)
 
-A Codex skill for working with Gemini through the built-in browser. It supports research, literature searches, derivations, manuscript review, and data or code analysis. Codex owns execution, evidence checks, and the final deliverable; Gemini contributes independent analysis and review.
+A Codex skill for working with Gemini through the built-in browser. It supports research, literature searches, derivations, solution planning, manuscript review, and data or code analysis. Both produce independent proposals in the first round and separately revise a shared baseline in later rounds. Codex checks evidence, integrates improvements after each round, and owns the final deliverable.
 
-When invoked, the skill checks the models and thinking settings available to the current Gemini account, selects the strongest available capability and highest thinking level, submits relevant authorized materials, retrieves the actual response, and checks it against Codex's own work and primary evidence.
+The default is two rounds, with at most three including the first, and earlier stopping when the criteria are met. Before each submission, Codex confirms Gemini's strongest available model and highest thinking setting, submits relevant authorized materials, retrieves the complete response, and checks it against Codex's proposal and primary evidence.
 
 ## Capabilities
 
-- Inspect current model and thinking menus without hard-coding a model version.
+- Save Codex's complete first-round proposal before Gemini independently answers the same question using the original materials.
+- Have both revise the same consolidated baseline and key questions in later rounds; keep Codex's current-round proposal and new conclusions out of Gemini's input until its answer is complete.
+- Inspect current model and thinking menus and confirm the highest available settings each round without hard-coding a model version.
 - Upload task-relevant authorized files and verify upload completion, content access, and coverage separately.
-- Retrieve complete replies and ask focused follow-up questions about sources, equations, data, or disagreements.
+- Retrieve complete replies, make a bounded number of substantive revisions, and stop when further changes offer little value.
 - Check important claims using original documents, independent calculations, or actual code execution and tests.
-- Track necessary file versions, sources, and collaboration evidence.
+- Preserve each proposal, consolidated version, material version, and verification record separately.
 - Hand authentication back to the user when required, then resume the task.
 
 ## Requirements
 
-The Codex session must provide browser UI tools and access to the Gemini website. File uploads also require a file chooser interface in the host environment. Available models and thinking levels depend on the user's Gemini plan, remaining quota, and current account UI.
+The Codex session must provide built-in browser UI tools and access to the Gemini website. File uploads also require a file chooser interface in the host environment. Available models and thinking levels depend on the user's Gemini plan, remaining quota, and current account UI.
 
-The host supplies browser control. This repository supplies the skill instructions, UI metadata, and operating guidance. Each user signs into their own Gemini account in their own browser.
+All Gemini authentication, uploads, submissions, and reply retrieval take place in Codex's built-in browser. Select `iab` explicitly when the tools use that identifier. The skill prohibits independently connecting to or controlling local Chrome, Edge, or other external browsers. Handle authentication and page failures in the same built-in browser. If that capability is unavailable, preserve completed analysis and report the remaining collaboration steps.
+
+The host supplies browser control. This repository supplies the skill instructions, UI metadata, and operating guidance. Each user signs into their own Gemini account in Codex's built-in browser.
 
 ## Installation
 
@@ -37,8 +41,10 @@ Current official documentation lists `~/.agents/skills` for personal skills and 
 ## Usage
 
 ```text
-Use $codex-with-gemini to research and compare the main approaches to this
-problem. Verify key papers, compare the analyses, and give an evidence-based conclusion.
+Use $codex-with-gemini: produce independent, complete research proposals
+in round one and verify key papers. In later rounds, separately revise
+the same consolidated baseline. Default to two rounds, at most three,
+with Codex deciding and delivering the complete final solution.
 ```
 
 ```text
@@ -56,11 +62,16 @@ The skill body is written in Simplified Chinese. The task may specify another ou
 
 ## Workflow
 
-1. Define the question, material versions, and important checks; form an independent Codex analysis.
-2. Inspect Gemini's available models and highest thinking setting, then confirm the selected UI state.
-3. Submit the task and necessary materials, verify attachment access, and wait for the complete response.
-4. Follow up on consequential differences and check the evidence in original sources, calculations, data, or actual executions.
-5. Deliver the requested result with concise provenance for the model configuration, materials, and adopted conclusions.
+Each round follows: shared input → Codex proposal A → Gemini proposal B → Codex consolidated version S. Codex saves A before requesting B, then compares and verifies both after receiving the complete B. Keep the original proposals separate from S.
+
+1. **Independent first round:** define the question, deliverable, material versions, and constraints, then save a complete A1. Ask Gemini to produce B1 from the same question and authorized original materials. Do not send A1, its summary, or its recommended approach before B1 is complete. Verify the evidence and form S1.
+2. **Separate second-round revisions:** select the 2–3 most consequential issues and give both the same S1, necessary original materials, verified evidence, and acceptance criteria. Codex saves A2 before Gemini produces B2, then checks both and forms S2.
+3. **Optional third round:** produce A3, B3, and S3 only when a major issue still affects method selection or implementation, can be resolved with available materials or reasonable computation, and justifies another round.
+4. **Evidence-based decision and delivery:** connect each proposal's claims with verification evidence and the reasons for adopting, combining, or rejecting them. Deliver the complete final version with the actual model and thinking settings, material scope, substantive improvements, round count, and stopping reason.
+
+In later rounds, Gemini receives the shared baseline and task materials without seeing the current-round A or its new conclusions before completing B. If that content has already been disclosed, start a fresh conversation in the same built-in browser and supply only the shared input. Describe later versions as separate revisions of a shared baseline.
+
+Default to two rounds, at most three including the first. Stop after round one if the task is complete and another revision offers little value. Follow-ups that change the core approach or request a new proposal count toward the next round; attachment or omission repairs must stay limited to the missing content. Rounds two and three share a soft budget of about 20 minutes, including model waiting. At that point, collect any response already being generated and finish necessary checks without starting another round. The user's explicit workflow and time requirements take precedence.
 
 Model settings are checked in the visible UI. When response details are available, also inspect the model that produced the reply. Report the configuration actually used when availability changes.
 
@@ -76,7 +87,11 @@ Create two synthetic TXT files containing independent random identifiers, task i
 
 For a reproducible example, use times `0, 2, 5, 9, 10 s` and powers `0, 12, 6, 4, 0 W`, assuming linear changes between consecutive samples. The segment energies are `12, 27, 20, 2 J`; total energy is `61 J`; time-average power is `6.1 W`; the sample arithmetic mean is `4.4 W`.
 
-Check attachment identifiers, complete response retrieval, numeric results, and units. Keep execution evidence for the environment being tested. The published repository contains the reusable skill and project documentation; users retain their own execution records.
+Check attachment identifiers, complete response retrieval, numeric results, and units. Also verify that A1 was saved before submission and that Gemini's input did not contain A1. This simple calculation may finish after the first round when the stopping criteria are met.
+
+To test later revisions, use a task with substantive unresolved issues. Check that both receive the same baseline, A2 is saved before B2, Gemini has no access to A2 before answering, and the consolidated version records verification evidence, improvements, and a stopping reason. The actual round count should follow the two-round default, three-round maximum, and early-stopping conditions.
+
+Keep execution evidence for the environment being tested. The published repository contains the reusable skill and project documentation; users retain their own execution records.
 
 ## Structure
 

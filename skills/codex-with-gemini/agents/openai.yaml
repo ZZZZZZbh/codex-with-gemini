@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex 与 Gemini 协作"
-  short_description: "让 Codex 与 Gemini 使用最高可用推理档位协作检索、分析并交叉核对"
-  default_prompt: "使用 $codex-with-gemini 完成以下学术研究任务：主动调用 Gemini 当时可用的最高能力模型和最高思考档位，按任务需要提交相关文件和数据，获取回复并与 Codex 的检索和分析交叉核对。"
+  short_description: "首轮独立出稿，后续分别修订；Gemini最强模型最高思考，Codex默认两轮最多三轮裁定"
+  default_prompt: "使用 $codex-with-gemini：首轮Codex先保存独立方案A，Gemini以当前最强可用模型和最高思考等级独立提出B，再由Codex核验并形成综合方案。后续双方基于同一底稿和关键问题分别修订，每轮由Codex对比、修改和复核；默认两轮，最多三轮，按实质收益及时停止并交付完整最终方案。"
