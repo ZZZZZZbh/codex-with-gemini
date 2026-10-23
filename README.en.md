@@ -2,26 +2,49 @@
 
 [简体中文](README.md)
 
-A Codex skill for working with Gemini through the built-in browser. It supports research, literature searches, derivations, solution planning, manuscript review, and data or code analysis. Both produce independent proposals in the first round and separately revise a shared baseline in later rounds. Codex checks evidence, integrates improvements after each round, and owns the final deliverable.
+**Codex leads the work: it defines tasks, directs Gemini, conducts its own searches, cross-checks evidence, drafts, and owns the final deliverable. Gemini has three supporting roles: supplementary search and queries, context-aware manuscript sentence revision, and academic-writing review.**
 
-The default is two rounds, with at most three including the first, and earlier stopping when the criteria are met. Before each submission, Codex confirms Gemini's strongest available model and highest thinking setting, submits relevant authorized materials, retrieves the complete response, and checks it against Codex's proposal and primary evidence.
+Collaboration takes place in Codex's built-in browser. Before each submission, confirm the strongest available model appropriate to the task and the highest visible thinking setting. After retrieving the complete response, Codex checks it against the manuscript and original evidence and decides what to adopt.
 
-## Capabilities
+## Roles
 
-- Save Codex's complete first-round proposal before Gemini independently answers the same question using the original materials.
-- Have both revise the same consolidated baseline and key questions in later rounds; keep Codex's current-round proposal and new conclusions out of Gemini's input until its answer is complete.
-- Inspect current model and thinking menus and confirm the highest available settings each round without hard-coding a model version.
-- Upload task-relevant authorized files and verify upload completion, content access, and coverage separately.
-- Retrieve complete replies, make a bounded number of substantive revisions, and stop when further changes offer little value.
-- Check important claims using original documents, independent calculations, or actual code execution and tests.
-- Preserve each proposal, consolidated version, material version, and verification record separately.
-- Hand authentication back to the user when required, then resume the task.
+| Participant | Responsibilities |
+| --- | --- |
+| Codex | Define the objective, authoritative version, authorized scope, and acceptance criteria; assign specific Gemini tasks; independently search, analyze, and draft; verify both sets of results and complete execution and delivery |
+| Gemini: supplementary search and queries | Look up assigned questions about sources, facts, terminology, and usage; return traceable sources, content locations, and the statements they support |
+| Gemini: manuscript sentence revision | Improve wording, syntax, grammar, transitions, and academic expression in the context of the authorized text while preserving meaning, data, formula meanings, and evidence strength |
+| Gemini: academic-writing review | Check exposition, transitions, references within the text, terminology and symbol consistency, and the relationship between claims and citations; locate issues and propose necessary edits |
+
+Select the supporting roles needed for the task. Codex may share the current draft, existing evidence, and specific questions directly with Gemini. Track coverage by section for full-manuscript tasks. Polishing may return a complete manuscript revised from the supplied original.
+
+Codex handles authorized derivations, model or experiment design, data processing, and code implementation. Gemini identifies scientific concerns and supplies their basis for Codex to verify. Its role does not extend to proposing a separate research program, redefining contributions, or writing a paper independently of the source manuscript.
+
+## Search and verification workflow
+
+1. **Codex assigns concrete questions.** Identify facts, terminology, claims, and information gaps. Specify Gemini's search scope, keyword directions, source requirements, and response format.
+2. **Codex searches independently.** Use its own search tools and read original materials. Both investigate important claims; supplementary questions may use different keywords, sources, or perspectives. Codex can continue working while Gemini responds.
+3. **Gemini performs targeted supplementary searches.** Return actual keywords, original links or DOIs, brief original excerpts or content locations, supported statements, and applicable conditions. Check visible search activity, source records, and content anchors to establish what was actually retrieved.
+4. **Codex cross-checks the evidence.** Compare sources on the same question, including definitions, conditions, dates, and evidence quality. Deduplicate references to the same paper or original dataset. Resolve disagreements against original sources and request targeted follow-ups when needed.
+5. **Codex decides and delivers.** Apply verified evidence to the authorized task, assess Gemini's editing suggestions, and complete the final text, revision, or review.
+
+If an ordinary Gemini reply supplies only prior knowledge or suggested queries, or explicitly reports that no web search occurred, inspect the page's tools and source options. Enable an available search tool or Deep Research as appropriate, then complete the retrieval. For Deep Research, check that the plan stays within the assigned source-verification questions before starting it and waiting for the complete result. Mark the search complete once verifiable results are available and Codex has checked key original sources.
+
+Prefer original English-language papers, official documentation, original datasets, and other primary sources. Use directly relevant Chinese primary materials for Chinese laws, standards, local questions, or specified Chinese sources. Check terminology and usage against originals in the relevant language. Pure sentence editing without a need for external verification can proceed directly.
+
+## Editing, review, and completion
+
+- Confirm the authoritative file, version, and authorized scope. Process long manuscripts by section and record coverage.
+- Gemini proposes usable revisions and review comments grounded in the original. Codex checks meaning, context, and evidence strength before adopting them.
+- Review-only tasks produce findings. With editing authorization, Codex writes accepted changes to the specified file.
+- Use targeted follow-ups for missing sources, unread material, omitted sentences, or concrete disagreements. Deliver after completing the authorized scope, key evidence checks, and necessary changes. Further interaction depends on the user's time requirements and its practical value.
 
 ## Requirements
 
-The Codex session must provide built-in browser UI tools and access to the Gemini website. File uploads also require a file chooser interface in the host environment. Available models and thinking levels depend on the user's Gemini plan, remaining quota, and current account UI.
+The Codex session must provide built-in browser UI tools and access to Gemini. File uploads also require a file chooser interface in the host environment. Available models, search tools, and thinking settings depend on the user's Gemini plan, remaining quota, and current account UI.
 
-All Gemini authentication, uploads, submissions, and reply retrieval take place in Codex's built-in browser. Select `iab` explicitly when the tools use that identifier. The skill prohibits independently connecting to or controlling local Chrome, Edge, or other external browsers. Handle authentication and page failures in the same built-in browser. If that capability is unavailable, preserve completed analysis and report the remaining collaboration steps.
+All Gemini authentication, uploads, submissions, and reply retrieval take place in Codex's built-in browser. Select `iab` explicitly when the tools use that identifier. Handle authentication and page failures in the same browser. If the capability is unavailable, preserve completed work and report the remaining collaboration steps.
+
+Choose the model using the current menu, capability descriptions, and Google documentation when needed, without pinning a version. Check the selected state before each submission. When response details are available, verify the actual generating model and changes caused by quota or automatic routing. Use the highest visible available thinking setting and allow the response to finish.
 
 The host supplies browser control. This repository supplies the skill instructions, UI metadata, and operating guidance. Each user signs into their own Gemini account in Codex's built-in browser.
 
@@ -34,64 +57,52 @@ Use $skill-installer to install skills/codex-with-gemini from
 https://github.com/ZZZZZZbh/codex-with-gemini.
 ```
 
-For manual installation, download or clone this repository and copy the entire `skills/codex-with-gemini` folder into a personal skill directory discovered by your client.
+For manual installation, download or clone the repository and copy the entire `skills/codex-with-gemini` folder into a personal skill directory recognized by your client. Keep one installation of the skill, confirm that `codex-with-gemini` appears in the skill list, and refresh or restart as required by the client.
 
-Current official documentation lists `~/.agents/skills` for personal skills and `.agents/skills` for project skills. Some clients use `~/.codex/skills`; use the location recognized by your installation and keep one copy of the skill. Confirm that `codex-with-gemini` appears in the skill list and restart the client if needed. See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills).
+When updating an existing installation, synchronize the skill entry point, `agents/openai.yaml`, and `references/browser-workflow.md` so discovery text, default prompts, and operating instructions use the same role division.
 
 ## Usage
 
 ```text
-Use $codex-with-gemini: produce independent, complete research proposals
-in round one and verify key papers. In later rounds, separately revise
-the same consolidated baseline. Default to two rounds, at most three,
-with Codex deciding and delivering the complete final solution.
+Use $codex-with-gemini to polish and review this manuscript. Codex leads,
+searches independently, and directs Gemini's supplementary searches.
+Codex cross-checks both source sets and decides the final wording.
+Gemini revises manuscript sentences and reviews academic writing as needed.
 ```
 
 ```text
-Use $codex-with-gemini to review the derivation in the files I specify.
-Upload relevant materials as needed and report disagreements, evidence,
-and revision suggestions. This task is review-only.
+Use $codex-with-gemini to check these terms in the manuscript. Codex assigns
+Gemini specific original-source queries and searches independently, then
+combines verified evidence into wording recommendations. Review only.
 ```
 
 ```text
-Use $codex-with-gemini to review this algorithm proposal, then have Codex
-check Gemini's suggestions against the implementation and appropriate tests.
+Use $codex-with-gemini to check this theory paragraph. Codex verifies the
+derivation and scientific meaning. Gemini retrieves assigned original
+sources and reviews the prose. Codex consolidates issues and suggested edits.
 ```
 
-The skill body is written in Simplified Chinese. The task may specify another output language and additional scope constraints.
+The skill body is written in Simplified Chinese. Tasks may specify another language, material scope, review-only operation, or other requirements. Inspecting, checking, or editing this skill is local maintenance and does not require a Gemini conversation.
 
-## Workflow
+## Local validation
 
-Each round follows: shared input → Codex proposal A → Gemini proposal B → Codex consolidated version S. Codex saves A before requesting B, then compares and verifies both after receiving the complete B. Keep the original proposals separate from S.
+Use a synthetic manuscript paragraph without sensitive information. Include verifiable factual errors, exaggerated conclusions, and language issues, and number its sentences. For example, use NSE and KGE evaluation metrics and have Codex assign definition and benchmark queries, sentence revisions, and writing review.
 
-1. **Independent first round:** define the question, deliverable, material versions, and constraints, then save a complete A1. Ask Gemini to produce B1 from the same question and authorized original materials. Do not send A1, its summary, or its recommended approach before B1 is complete. Verify the evidence and form S1.
-2. **Separate second-round revisions:** select the 2–3 most consequential issues and give both the same S1, necessary original materials, verified evidence, and acceptance criteria. Codex saves A2 before Gemini produces B2, then checks both and forms S2.
-3. **Optional third round:** produce A3, B3, and S3 only when a major issue still affects method selection or implementation, can be resolved with available materials or reasonable computation, and justifies another round.
-4. **Evidence-based decision and delivery:** connect each proposal's claims with verification evidence and the reasons for adopting, combining, or rejecting them. Deliver the complete final version with the actual model and thinking settings, material scope, substantive improvements, round count, and stopping reason.
+Check these actual behaviors:
 
-In later rounds, Gemini receives the shared baseline and task materials without seeing the current-round A or its new conclusions before completing B. If that content has already been disclosed, start a fresh conversation in the same built-in browser and supply only the shared input. Describe later versions as separate revisions of a shared baseline.
+1. Codex assigns Gemini specific questions and responsibilities while using its own tools to search and read original sources.
+2. Inspect Gemini's model and thinking settings, observe actual retrieval activity, and obtain complete source results. If an ordinary reply did not search, verify the results after enabling an available retrieval tool.
+3. Check sentence coverage, preservation of meaning, and whether scientific concerns are passed to Codex for verification.
+4. Codex opens key sources, verifies definitions, equations, pages, and conditions, deduplicates sources, and records why suggestions were adopted or corrected.
+5. Compare the original and final text to confirm that changes cover the authorized scope and Gemini stays within its three supporting roles.
 
-Default to two rounds, at most three including the first. Stop after round one if the task is complete and another revision offers little value. Follow-ups that change the core approach or request a new proposal count toward the next round; attachment or omission repairs must stay limited to the missing content. Rounds two and three share a soft budget of about 20 minutes, including model waiting. At that point, collect any response already being generated and finish necessary checks without starting another round. The user's explicit workflow and time requirements take precedence.
-
-Model settings are checked in the visible UI. When response details are available, also inspect the model that produced the reply. Report the configuration actually used when availability changes.
+To test attachment support, generate a TXT file with a random identifier and source text. Verify actual upload and reading through content anchors. Record manuscript-task results separately from attachment checks. Keep execution evidence in the user's own workspace.
 
 ## Files and authentication
 
-The skill contains workflow instructions, generic URLs, and browser operation examples. Users manage their own passwords, verification codes, API keys, cookies, and login tokens separately from the skill.
+Submit only materials specified or clearly authorized for the current task. The repository contains reusable instructions and project documentation. Keep research drafts, test records, screenshots, private conversation links, and browser state in the user's own workspace. Passwords, verification codes, API keys, cookies, and login tokens must not be stored in the skill or collaboration records.
 
-Submit only materials specified or clearly authorized for the current task. Keep research files, browser profiles, screenshots, and conversation records in the user's own workspace. Check issue and PR content for personal information or private materials before submitting it.
-
-## Local smoke test
-
-Create two synthetic TXT files containing independent random identifiers, task instructions, and data. Save a Codex reference result locally before submission. Upload the files and ask Gemini to return their identifiers, calculations, and necessary derivations.
-
-For a reproducible example, use times `0, 2, 5, 9, 10 s` and powers `0, 12, 6, 4, 0 W`, assuming linear changes between consecutive samples. The segment energies are `12, 27, 20, 2 J`; total energy is `61 J`; time-average power is `6.1 W`; the sample arithmetic mean is `4.4 W`.
-
-Check attachment identifiers, complete response retrieval, numeric results, and units. Also verify that A1 was saved before submission and that Gemini's input did not contain A1. This simple calculation may finish after the first round when the stopping criteria are met.
-
-To test later revisions, use a task with substantive unresolved issues. Check that both receive the same baseline, A2 is saved before B2, Gemini has no access to A2 before answering, and the consolidated version records verification evidence, improvements, and a stopping reason. The actual round count should follow the two-round default, three-round maximum, and early-stopping conditions.
-
-Keep execution evidence for the environment being tested. The published repository contains the reusable skill and project documentation; users retain their own execution records.
+Check issue and PR content for personal information or private materials before submitting it. When authentication expires, the user signs in through the built-in browser, and work resumes afterward.
 
 ## Structure
 
@@ -108,7 +119,7 @@ skills/codex-with-gemini/
 
 ## Contributing
 
-Issues and pull requests are welcome. For browser compatibility problems, include the host version, visible controls or error symptoms, and reproduction steps. For research checks, provide a public minimal example and its expected result.
+Issues and pull requests are welcome. For browser compatibility problems, include the host version, visible controls or error symptoms, and reproduction steps. For retrieval, editing, or writing-review issues, provide a public minimal example and its expected result.
 
 ## License
 

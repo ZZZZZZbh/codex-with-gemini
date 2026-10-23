@@ -1,4 +1,4 @@
 interface:
   display_name: "Codex 与 Gemini 协作"
-  short_description: "首轮独立出稿，后续分别修订；Gemini最强模型最高思考，Codex默认两轮最多三轮裁定"
-  default_prompt: "使用 $codex-with-gemini：首轮Codex先保存独立方案A，Gemini以当前最强可用模型和最高思考等级独立提出B，再由Codex核验并形成综合方案。后续双方基于同一底稿和关键问题分别修订，每轮由Codex对比、修改和复核；默认两轮，最多三轮，按实质收益及时停止并交付完整最终方案。"
+  short_description: "Codex主导并自行检索；Gemini补查资料、润色全文和审查写作"
+  default_prompt: "使用 $codex-with-gemini：由Codex主导，按需指挥Gemini补查资料、润色全文相关语句和审查论文写作；涉及检索时Codex也自行搜索，交叉核验并整合双方来源，负责分析、取舍与最终交付。"
